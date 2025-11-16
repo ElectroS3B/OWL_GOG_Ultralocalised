@@ -1,0 +1,9 @@
+## OWL requirements file ##
+# OpenCV should be installed separately
+numpy
+imutils
+gpiozero
+pandas
+RPi.GPIO
+tqdm
+blessed
