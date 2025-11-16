@@ -1,0 +1,56 @@
+2025-05-15 16:49:48,109 - INFO - Starting OWL - checking imports...
+2025-05-15 16:49:51,426 - INFO - All required modules imported successfully
+2025-05-15 16:49:51 - INFO - [__main__] - Initializing OWL...
+2025-05-15 16:49:51 - INFO - [__main__] - Starting OWL version 2.1.0
+2025-05-15 16:49:51 - INFO - [__main__] - System Information: OS: Linux 6.12.25+rpt-rpi-2712, Machine: aarch64
+2025-05-15 16:49:51 - INFO - [__main__] - Python Version: 3.11.2 (main, Nov 30 2024, 21:22:50) [GCC 12.2.0], Implementation: CPython, Compiler: GCC 12.2.0
+2025-05-15 16:49:51 - INFO - [__main__] - Hardware: Raspberry Pi 5 Model B Rev 1.0
+fatal : ni ceci ni aucun de ses répertoires parents n'est un dépôt git : .git
+2025-05-15 16:49:51 - WARNING - [SystemInfo] - Git information could not be retrieved: Command '['git', 'rev-parse', '--short', 'HEAD']' returned non-zero exit status 128.
+2025-05-15 16:49:51 - INFO - [__main__] - Git information not available.
+2025-05-15 16:49:51 - WARNING - [utils.config_manager] - Unknown keys in section [Relays]: 5, 4
+2025-05-15 16:49:51 - INFO - [utils.config_manager] - Successfully loaded and validated config: /home/owl/owl/config/DAY_SENSITIVITY_2.ini
+2025-05-15 16:49:51 - INFO - [__main__] - Raspberry Pi version: rpi-5
+2025-05-15 16:49:51 - ERROR - [utils.output_manager] - Failed to initialize RelayCo2025-05-15 16:49:52 - INFO - [utils.output_manager] - [INFO] Nozzle setup complete. Initiating camera...
+2025-05-15 16:49:52 - WARNING - [__main__] - High resolution, expect low framerate. Resolution set to 640x480.
+2025-05-15 16:49:52 - INFO - [utils.video_manager] - Camera type: Picamera2Stream
+2025-05-15 16:49:52 - INFO - [utils.video_manager] - Setting camera format
+2025-05-15 16:49:52 - INFO - [utils.video_manager] - Setting camera controls
+[0:00:09.876688085] [866] [1;32m INFO [1;37mCamera [1;34mcamera_manager.cpp:326 [0mlibcamera v0.5.0+59-d83ff0a4
+[0:00:09.887148751] [1402] [1;32m INFO [1;37mRPI [1;34mpisp.cpp:720 [0mlibpisp version v1.2.1 981977ff21f3 29-04-2025 (14:13:50)
+[0:00:09.897895585] [1402] [1;32m INFO [1;37mRPI [1;34mpisp.cpp:1179 [0mRegistered camera /base/axi/pcie@1000120000/rp1/i2c@80000/imx500@1a to CFE device /dev/media2 and ISP device /dev/media0 using PiSP variant BCM2712_C0
+2025-05-15 16:49:52 - INFO - [picamera2.picamera2] - Initialization successful.
+2025-05-15 16:49:52 - INFO - [picamera2.picamera2] - Camera now open.
+2025-05-15 16:49:52 - INFO - [utils.video_manager] - [INFO] Unrecognised camera module, continuing with default settings.
+2025-05-15 16:49:52 - INFO - [picamera2.picamera2] - Camera configuration has been adjusted!
+[0:00:09.902763473] [866] [1;32m INFO [1;37mCamera [1;34mcamera.cpp:1205 [0mconfiguring streams: (0) 640x480-RGB888 (1) 2028x1520-BGGR_PISP_COMP1
+[0:00:09.902917733] [1402] [1;32m INFO [1;37mRPI [1;34mpisp.cpp:1483 [0mSensor: /base/axi/pcie@1000120000/rp1/i2c@80000/imx500@1a - Selected sensor format: 2028x1520-SBGGR10_1X10 - Selected CFE format: 2028x1520-PC1B
+2025-05-15 16:49:52 - INFO - [picamera2.picamera2] - Configuration successful!
+2025-05-15 16:49:52 - INFO - [picamera2.picamera2] - Camera started
+2025-05-15 16:49:59 - INFO - [utils.greenongreen] - Using NCNN model from models/best_ncnn_model
+WARNING ⚠️ Unable to automatically guess model task, assuming 'task=detect'. Explicitly define task for your model, i.e. 'task=detect', 'segment', 'classify','pose' or 'obb'.
+Loading models/best_ncnn_model for NCNN inference...
+2025-05-15 16:50:10 - INFO - [__main__] - [INFO] Approximate FPS: 6.59
+2025-05-15 16:50:19 - INFO - [__main__] - [INFO] Approximate FPS: 11.71
+2025-05-15 16:50:27 - INFO - [__main__] - [INFO] Approximate FPS: 12.37
+2025-05-15 16:50:35 - INFO - [__main__] - [INFO] Approximate FPS: 11.79
+[0:00:54.760210076] [1402] [1;33m WARN [1;37mV4L2 [1;34mv4l2_videodevice.cpp:2150 [0;32m/dev/video4[30:cap]: [0mDequeue timer of 1000000.00us has expired!
+[0:00:54.760262817] [1402] [1;31mERROR [1;37mRPI [1;34mpipeline_base.cpp:1358 [0mCamera frontend has timed out!
+[0:00:54.760268076] [1402] [1;31mERROR [1;37mRPI [1;34mpipeline_base.cpp:1359 [0mPlease check that your camera sensor connector is attached securely.
+[0:00:54.760272187] [1402] [1;31mERROR [1;37mRPI [1;34mpipeline_base.cpp:1360 [0mAlternatively, try another cable and/or sensor.
+other instance of OWL appears to be running. The GPIO pins are in use.
+
+[92mRunning OWL Processes:[0m
+    [1m[97mPID: 865[0m - Command: python ./owl.py
+    [1m[97mPID: 866[0m - Command: python ./owl.py
+
+[92mCommands to Stop:[0m
+    [1m[97mkill <PID>[0m  - Graceful termination
+    [1m[97mkill -9 <PID>[0m - Force termination (use with caution)
+
+[92mImportant Notes:[0m
+- Double-check the PID before stopping it!
+- If no processes are listed but error persists, check GPIO outputs
+- Ensure all GPIO resources are properly released
+- Try rebooting if the issue persists
+

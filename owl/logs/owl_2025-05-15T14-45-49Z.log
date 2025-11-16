@@ -1,0 +1,89 @@
+2025-05-15 16:45:50,917 - INFO - Starting OWL - checking imports...
+2025-05-15 16:45:54,473 - INFO - All required modules imported successfully
+2025-05-15 16:45:54 - INFO - [__main__] - Initializing OWL...
+2025-05-15 16:45:54 - INFO - [__main__] - Starting OWL version 2.1.0
+2025-05-15 16:45:54 - INFO - [__main__] - System Information: OS: Linux 6.12.25+rpt-rpi-2712, Machine: aarch64
+2025-05-15 16:45:54 - INFO - [__main__] - Python Version: 3.11.2 (main, Nov 30 2024, 21:22:50) [GCC 12.2.0], Implementation: CPython, Compiler: GCC 12.2.0
+2025-05-15 16:45:54 - INFO - [__main__] - Hardware: Raspberry Pi 5 Model B Rev 1.0
+fatal : ni ceci ni aucun de ses répertoires parents n'est un dépôt git : .git
+2025-05-15 16:45:54 - WARNING - [SystemInfo] - Git information could not be retrieved: Command '['git', 'rev-parse', '--short', 'HEAD']' returned non-zero exit status 128.
+2025-05-15 16:45:54 - INFO - [__main__] - Git information not available.
+2025-05-15 16:45:54 - WARNING - [utils.config_manager] - Unknown keys in section [Relays]: 5, 4
+2025-05-15 16:45:54 - INFO - [utils.config_manager] - Successfully loaded and validated config: /home/owl/owl/config/DAY_SENSITIVITY_2.ini
+2025-05-15 16:45:54 - INFO - [__main__] - Raspberry Pi version: rpi-5
+2025-05-15 16:45:54 - ERROR - [utils.output_manager] - Failed to initialize RelayCo2025-05-15 16:45:55 - INFO - [utils.output_manager] - [INFO] Nozzle setup complete. Initiating camera...
+2025-05-15 16:45:55 - WARNING - [__main__] - High resolution, expect low framerate. Resolution set to 640x480.
+2025-05-15 16:45:55 - INFO - [utils.video_manager] - Camera type: Picamera2Stream
+2025-05-15 16:45:55 - INFO - [utils.video_manager] - Setting camera format
+2025-05-15 16:45:55 - INFO - [utils.video_manager] - Setting camera controls
+[0:00:10.520792028] [793] [1;32m INFO [1;37mCamera [1;34mcamera_manager.cpp:326 [0mlibcamera v0.5.0+59-d83ff0a4
+Traceback (most recent call last):
+  File "/home/owl/owl/./owl.py", line 311, in __init__
+    self.cam = VideoStream(resolution=self.resolution,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/owl/owl/utils/video_manager.py", line 298, in __init__
+    self.stream = PiCamera2Stream(src=src, resolution=resolution, exp_compensation=exp_compensation, **kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/owl/owl/utils/video_manager.py", line 127, in __init__
+    self.camera = Picamera2(src)
+                  ^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/picamera2/picamera2.py", line 281, in __init__
+    camera_num = self.global_camera_info()[camera_num]['Num']
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+IndexError: list index out of range
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/owl/owl/./owl.py", line 686, in <module>
+    owl = Owl(
+          ^^^^
+  File "/home/owl/owl/./owl.py", line 320, in __init__
+    raise errors.CameraNotFoundError(error_type="Camera Not Found", original_error=str(e))
+utils.error_manager.CameraNotFoundError: 
+[1m[91mCamera Connection Error[0m
+[93mError ID: OWL_20250515_164555[0m
+
+[92mProblem:[0m
+Failed to initialize camera: [1m[97mCamera Not Found[0m
+Error details: list index out of range
+
+[92mSolutions:[0m
+1. Check if the camera ribbon cable is properly connected
+2. Inspect the ribbon cable for damage
+3. Verify camera module is properly seated
+4. Check if camera is enabled in raspi-config
+5. Try reconnecting the camera with the system powered off
+
+[92mHow to get more information:[0m
+• [1m[97mvcgencmd get_camera[0m - Check if camera is detected
+• [1m[97mlibcamera-hello[0m - Test camera feed
+• [1m[97mdmesg | grep -i camera[0m - Check system logs
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/owl/owl/utils/output_manager.py", line 424, in __init__
+    self.relay = RelayControl(self.relay_dict)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/owl/owl/utils/output_manager.py", line 366, in __init__
+    raise OWLAlreadyRunningError("OWL instance may already be running.") from e
+utils.error_manager.OWLAlreadyRunningError: 
+[1m[91mOWL Process Already Running[0m
+[93mError ID: OWL_20250515_164554[0m
+
+[92mStatus:[0m
+Another instance of OWL appears to be running. The GPIO pins are in use.
+
+[92mRunning OWL Processes:[0m
+    [1m[97mPID: 793[0m - Command: python ./owl.py
+    [1m[97mPID: 794[0m - Command: python ./owl.py
+
+[92mCommands to Stop:[0m
+    [1m[97mkill <PID>[0m  - Graceful termination
+    [1m[97mkill -9 <PID>[0m - Force termination (use with caution)
+
+[92mImportant Notes:[0m
+- Double-check the PID before stopping it!
+- If no processes are listed but error persists, check GPIO outputs
+- Ensure all GPIO resources are properly released
+- Try rebooting if the issue persists
+
