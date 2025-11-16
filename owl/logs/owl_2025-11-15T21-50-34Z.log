@@ -1,0 +1,148 @@
+2025-11-15 22:50:36,423 - INFO - Starting OWL - checking imports...
+2025-11-15 22:50:40,120 - INFO - All required modules imported successfully
+2025-11-15 22:50:40 - INFO - [__main__] - Initializing OWL...
+2025-11-15 22:50:40 - INFO - [__main__] - Starting OWL version 2.1.0
+2025-11-15 22:50:40 - INFO - [__main__] - System Information: OS: Linux 6.12.25+rpt-rpi-2712, Machine: aarch64
+2025-11-15 22:50:40 - INFO - [__main__] - Python Version: 3.11.2 (main, Apr 28 2025, 14:11:48) [GCC 12.2.0], Implementation: CPython, Compiler: GCC 12.2.0
+2025-11-15 22:50:40 - INFO - [__main__] - Hardware: Raspberry Pi 5 Model B Rev 1.0
+fatal : ni ceci ni aucun de ses répertoires parents n'est un dépôt git : .git
+2025-11-15 22:50:40 - WARNING - [SystemInfo] - Git information could not be retrieved: Command '['git', 'rev-parse', '--short', 'HEAD']' returned non-zero exit status 128.
+2025-11-15 22:50:40 - INFO - [__main__] - Git information not available.
+2025-11-15 22:50:40 - WARNING - [utils.config_manager] - Unknown keys in section [Relays]: 4, 8, 7, 6, 5, 9
+2025-11-15 22:50:40 - INFO - [utils.config_manager] - Successfully loaded and validated config: /home/owl/owl/config/DAY_SENSITIVITY_2.ini
+2025-11-15 22:50:40 - INFO - [__main__] - Raspberry Pi version: rpi-5
+2025-11-15 22:50:40 - ERROR - [utils.output_manager] - Failed to initialize RelayCo2025-11-15 22:50:41 - INFO - [utils.output_manager] - [INFO] Nozzle setup complete. Initiating camera...
+2025-11-15 22:50:41 - WARNING - [__main__] - High resolution, expect low framerate. Resolution set to 1024x768.
+2025-11-15 22:50:41 - INFO - [utils.video_manager] - Camera type: Picamera2Stream
+2025-11-15 22:50:41 - INFO - [utils.video_manager] - Setting camera format
+2025-11-15 22:50:41 - INFO - [utils.video_manager] - Setting camera controls
+[0:00:11.191958510] [828] [1;32m INFO [1;37mCamera [1;34mcamera_manager.cpp:326 [0mlibcamera v0.5.0+59-d83ff0a4
+[0:00:11.202985788] [1344] [1;32m INFO [1;37mRPI [1;34mpisp.cpp:720 [0mlibpisp version v1.2.1 981977ff21f3 29-04-2025 (14:13:50)
+[0:00:11.213630103] [1344] [1;32m INFO [1;37mRPI [1;34mpisp.cpp:1179 [0mRegistered camera /base/axi/pcie@1000120000/rp1/i2c@80000/imx296@1a to CFE device /dev/media2 and ISP device /dev/media0 using PiSP variant BCM2712_C0
+2025-11-15 22:50:41 - INFO - [picamera2.picamera2] - Initialization successful.
+2025-11-15 22:50:41 - INFO - [picamera2.picamera2] - Camera now open.
+2025-11-15 22:50:41 - INFO - [utils.video_manager] - [INFO] Using IMX296 Global Shutter Camera
+2025-11-15 22:50:41 - INFO - [picamera2.picamera2] - Camera configuration has been adjusted!
+[0:00:11.217558584] [828] [1;32m INFO [1;37mCamera [1;34mcamera.cpp:1205 [0mconfiguring streams: (0) 1024x768-RGB888 (1) 1456x1088-RGGB_PISP_COMP1
+[0:00:11.217663103] [1344] [1;32m INFO [1;37mRPI [1;34mpisp.cpp:1483 [0mSensor: /base/axi/pcie@1000120000/rp1/i2c@80000/imx296@1a - Selected sensor format: 1456x1088-SRGGB10_1X10 - Selected CFE format: 1456x1088-PC1R
+2025-11-15 22:50:41 - INFO - [picamera2.picamera2] - Configuration successful!
+2025-11-15 22:50:41 - INFO - [picamera2.picamera2] - Camera started
+2025-11-15 22:50:49 - INFO - [utils.greenongreen] - Using NCNN model from models/best_ncnn_model
+WARNING ⚠️ Unable to automatically guess model task, assuming 'task=detect'. Explicitly define task for your model, i.e. 'task=detect', 'segment', 'classify','pose' or 'obb'.
+Loading models/best_ncnn_model for NCNN inference...
+2025-11-15 22:51:00 - INFO - [__main__] - [INFO] Approximate FPS: 6.17
+2025-11-15 22:51:09 - INFO - [__main__] - [INFO] Approximate FPS: 11.99
+2025-11-15 22:51:17 - INFO - [__main__] - [INFO] Approximate FPS: 12.02
+2025-11-15 22:51:25 - INFO - [__main__] - [INFO] Approximate FPS: 12.03
+2025-11-15 22:51:34 - INFO - [__main__] - [INFO] Approximate FPS: 12.03
+2025-11-15 22:51:42 - INFO - [__main__] - [INFO] Approximate FPS: 12.06
+2025-11-15 22:51:56 - INFO - [__main__] - [INFO] Approximate FPS: 7.12
+2025-11-15 22:52:07 - INFO - [__main__] - [INFO] Approximate FPS: 9.51
+2025-11-15 22:52:15 - INFO - [__main__] - [INFO] Approximate FPS: 11.71
+2025-11-15 22:52:24 - INFO - [__main__] - [INFO] Approximate FPS: 11.73
+2025-11-15 22:52:32 - INFO - [__main__] - [INFO] Approximate FPS: 11.62
+2025-11-15 22:52:41 - INFO - [__main__] - [INFO] Approximate FPS: 11.77
+2025-11-15 22:52:49 - INFO - [__main__] - [INFO] Approximate FPS: 11.76
+2025-11-15 22:52:58 - INFO - [__main__] - [INFO] Approximate FPS: 11.72
+2025-11-15 22:53:06 - INFO - [__main__] - [INFO] Approximate FPS: 11.73
+2025-11-15 22:53:15 - INFO - [__main__] - [INFO] Approximate FPS: 11.84
+2025-11-15 22:53:23 - INFO - [__main__] - [INFO] Approximate FPS: 11.81
+2025-11-15 22:53:32 - INFO - [__main__] - [INFO] Approximate FPS: 11.88
+2025-11-15 22:53:40 - INFO - [__main__] - [INFO] Approximate FPS: 11.79
+2025-11-15 22:53:49 - INFO - [__main__] - [INFO] Approximate FPS: 11.72
+2025-11-15 22:53:57 - INFO - [__main__] - [INFO] Approximate FPS: 11.73
+2025-11-15 22:54:06 - INFO - [__main__] - [INFO] Approximate FPS: 11.85
+2025-11-15 22:54:14 - INFO - [__main__] - [INFO] Approximate FPS: 11.82
+2025-11-15 22:54:23 - INFO - [__main__] - [INFO] Approximate FPS: 11.82
+2025-11-15 22:54:31 - INFO - [__main__] - [INFO] Approximate FPS: 11.70
+2025-11-15 22:54:40 - INFO - [__main__] - [INFO] Approximate FPS: 11.82
+2025-11-15 22:54:48 - INFO - [__main__] - [INFO] Approximate FPS: 11.77
+2025-11-15 22:54:57 - INFO - [__main__] - [INFO] Approximate FPS: 11.67
+2025-11-15 22:55:05 - INFO - [__main__] - [INFO] Approximate FPS: 11.81
+2025-11-15 22:55:14 - INFO - [__main__] - [INFO] Approximate FPS: 11.82
+2025-11-15 22:55:22 - INFO - [__main__] - [INFO] Approximate FPS: 11.81
+2025-11-15 22:55:31 - INFO - [__main__] - [INFO] Approximate FPS: 11.79
+2025-11-15 22:55:39 - INFO - [__main__] - [INFO] Approximate FPS: 11.79
+2025-11-15 22:55:48 - INFO - [__main__] - [INFO] Approximate FPS: 11.73
+2025-11-15 22:55:56 - INFO - [__main__] - [INFO] Approximate FPS: 11.75
+2025-11-15 22:56:04 - INFO - [__main__] - [INFO] Approximate FPS: 11.83
+2025-11-15 22:56:13 - INFO - [__main__] - [INFO] Approximate FPS: 11.16
+2025-11-15 22:56:23 - INFO - [__main__] - [INFO] Approximate FPS: 10.79
+2025-11-15 22:56:32 - INFO - [__main__] - [INFO] Approximate FPS: 10.88
+2025-11-15 22:56:41 - INFO - [__main__] - [INFO] Approximate FPS: 10.88
+2025-11-15 22:56:50 - INFO - [__main__] - [INFO] Approximate FPS: 10.80
+2025-11-15 22:57:00 - INFO - [__main__] - [INFO] Approximate FPS: 10.76
+2025-11-15 22:57:09 - INFO - [__main__] - [INFO] Approximate FPS: 10.83
+2025-11-15 22:57:18 - INFO - [__main__] - [INFO] Approximate FPS: 10.87
+2025-11-15 22:57:27 - INFO - [__main__] - [INFO] Approximate FPS: 10.87
+2025-11-15 22:57:41 - INFO - [__main__] - [INFO] Approximate FPS: 7.36
+2025-11-15 22:57:51 - INFO - [__main__] - [INFO] Approximate FPS: 9.56
+2025-11-15 22:58:01 - INFO - [__main__] - [INFO] Approximate FPS: 10.67
+2025-11-15 22:58:10 - INFO - [__main__] - [INFO] Approximate FPS: 10.91
+2025-11-15 22:58:19 - INFO - [__main__] - [INFO] Approximate FPS: 10.65
+2025-11-15 22:58:28 - INFO - [__main__] - [INFO] Approximate FPS: 11.11
+2025-11-15 22:58:37 - INFO - [__main__] - [INFO] Approximate FPS: 11.08
+2025-11-15 22:58:46 - INFO - [__main__] - [INFO] Approximate FPS: 11.00
+2025-11-15 22:59:01 - INFO - [__main__] - [INFO] Approximate FPS: 6.90
+2025-11-15 22:59:14 - INFO - [__main__] - [INFO] Approximate FPS: 7.73
+2025-11-15 22:59:23 - INFO - [__main__] - [INFO] Approximate FPS: 11.09
+2025-11-15 22:59:33 - INFO - [__main__] - [INFO] Approximate FPS: 10.33
+2025-11-15 22:59:41 - INFO - [__main__] - [INFO] Approximate FPS: 11.40
+2025-11-15 22:59:50 - INFO - [__main__] - [INFO] Approximate FPS: 11.36
+2025-11-15 22:59:59 - INFO - [__main__] - [INFO] Approximate FPS: 11.31
+2025-11-15 23:00:08 - INFO - [__main__] - [INFO] Approximate FPS: 10.73
+2025-11-15 23:00:20 - INFO - [__main__] - [INFO] Approximate FPS: 8.59
+2025-11-15 23:00:30 - INFO - [__main__] - [INFO] Approximate FPS: 9.75
+2025-11-15 23:00:40 - INFO - [__main__] - [INFO] Approximate FPS: 10.47
+2025-11-15 23:00:49 - INFO - [__main__] - [INFO] Approximate FPS: 11.33
+2025-11-15 23:00:58 - INFO - [__main__] - [INFO] Approximate FPS: 10.85
+2025-11-15 23:01:07 - INFO - [__main__] - [INFO] Approximate FPS: 11.22
+2025-11-15 23:01:16 - INFO - [__main__] - [INFO] Approximate FPS: 11.18
+2025-11-15 23:01:25 - INFO - [__main__] - [INFO] Approximate FPS: 10.82
+2025-11-15 23:01:34 - INFO - [__main__] - [INFO] Approximate FPS: 10.97
+2025-11-15 23:01:43 - INFO - [__main__] - [INFO] Approximate FPS: 11.08
+2025-11-15 23:01:52 - INFO - [__main__] - [INFO] Approximate FPS: 10.55
+2025-11-15 23:02:02 - INFO - [__main__] - [INFO] Approximate FPS: 10.94
+2025-11-15 23:02:11 - INFO - [__main__] - [INFO] Approximate FPS: 10.29
+2025-11-15 23:02:20 - INFO - [__main__] - [INFO] Approximate FPS: 11.24
+2025-11-15 23:02:30 - INFO - [__main__] - [INFO] Approximate FPS: 10.77
+2025-11-15 23:02:39 - INFO - [__main__] - [INFO] Approximate FPS: 10.87
+2025-11-15 23:02:48 - INFO - [__main__] - [INFO] Approximate FPS: 11.23
+2025-11-15 23:02:57 - INFO - [__main__] - [INFO] Approximate FPS: 10.74
+2025-11-15 23:03:06 - INFO - [__main__] - [INFO] Approximate FPS: 11.03
+2025-11-15 23:03:15 - INFO - [__main__] - [INFO] Approximate FPS: 11.08
+2025-11-15 23:03:24 - INFO - [__main__] - [INFO] Approximate FPS: 10.76
+2025-11-15 23:03:34 - INFO - [__main__] - [INFO] Approximate FPS: 10.52
+2025-11-15 23:03:46 - INFO - [__main__] - [INFO] Approximate FPS: 8.20
+2025-11-15 23:04:08 - INFO - [__main__] - [INFO] Approximate FPS: 4.58
+2025-11-15 23:04:29 - INFO - [__main__] - [INFO] Approximate FPS: 4.62
+2025-11-15 23:04:39 - INFO - [__main__] - [INFO] Approximate FPS: 10.24
+2025-11-15 23:04:49 - INFO - [__main__] - [INFO] Approximate FPS: 10.36
+2025-11-15 23:04:58 - INFO - [__main__] - [INFO] Approximate FPS: 10.94
+2025-11-15 23:05:07 - INFO - [__main__] - [INFO] Approximate FPS: 11.64
+2025-11-15 23:05:19 - INFO - [__main__] - [INFO] Approximate FPS: 8.19
+2025-11-15 23:05:30 - INFO - [__main__] - [INFO] Approximate FPS: 9.28
+2025-11-15 23:05:38 - INFO - [__main__] - [INFO] Approximate FPS: 11.47
+2025-11-15 23:05:47 - INFO - [__main__] - [INFO] Approximate FPS: 11.77
+2025-11-15 23:05:56 - INFO - [__main__] - [INFO] Approximate FPS: 10.65
+2025-11-15 23:06:07 - INFO - [__main__] - [INFO] Approximate FPS: 9.65
+2025-11-15 23:06:15 - INFO - [__main__] - [INFO] Approximate FPS: 11.55
+2025-11-15 23:06:24 - INFO - [__main__] - [INFO] Approximate FPS: 11.56
+2025-11-15 23:06:32 - INFO - [__main__] - [INFO] Approximate FPS: 12.00
+2025-11-15 23:06:41 - INFO - [__main__] - [INFO] Approximate FPS: 11.74
+2025-11-15 23:06:50 - INFO - [__main__] - [INFO] Approximate FPS: 10.78
+2025-11-15 23:06:59 - INFO - [__main__] - [INFO] Approximate FPS: 11.63
+2025-11-15 23:07:07 - INFO - [__main__] - [INFO] Approximate FPS: 11.74
+2025-11-15 23:07:16 - INFO - [__main__] - [INFO] Approximate FPS: 10.89
+2025-11-15 23:07:27 - INFO - [__main__] - [INFO] Approximate FPS: 9.17
+2025-11-15 23:07:42 - INFO - [__main__] - [INFO] Approximate FPS: 6.91
+2025-11-15 23:07:52 - INFO - [__main__] - [INFO] Approximate FPS: 9.60
+2025-11-15 23:08:05 - INFO - [__main__] - [INFO] Approximate FPS: 7.52
+2025-11-15 23:08:18 - INFO - [__main__] - [INFO] Approximate FPS: 8.08
+2025-11-15 23:08:29 - INFO - [__main__] - [INFO] Approximate FPS: 8.81
+2025-11-15 23:08:39 - INFO - [__main__] - [INFO] Approximate FPS: 9.93
+2025-11-15 23:08:50 - INFO - [__main__] - [INFO] Approximate FPS: 8.88
+2025-11-15 23:09:01 - INFO - [__main__] - [INFO] Approximate FPS: 9.48
+2025-11-15 23:09:11 - INFO - [__main__] - [INFO] Approximate FPS: 10.34
+2025-11-15 23:09:19 - INFO - [__main__] - [INFO] Approximate FPS: 11.40
+2025-11-15 23:09:28 - INFO - [__main__] - [INFO] Approximate FPS: 12.01
