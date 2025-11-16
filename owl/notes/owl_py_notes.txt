@@ -1,0 +1,98 @@
+################################################################################
+Notes on owl.py
+
+Summary completed on 10/11/2024
+Summary based on commit: 95dfb6b
+################################################################################
+
+Purpose:
+- Primary control script for OWL system
+- Handles real-time weed detection and sprayer control
+- Manages configuration, data collection, and hardware interfaces
+
+Entrypoint:
+- Validates Python environment and imports
+- Parses command line arguments:
+  - --show-display: Enable visualization windows
+  - --focus: Add blur detection to output
+  - --input: Path to input media (image/video/directory)
+- Creates Owl instance with parsed arguments
+- Starts detection loop via owl.hoot()
+
+Owl class:
+Main methods:
+- __init__: System initialization
+- hoot: Main detection loop
+- stop: Graceful shutdown
+- save_parameters: Save current settings
+- _log_system_info: Record system details
+
+Initialization (__init__):
+1. Configuration
+   - Validates config file
+   - Sets up logging
+   - Initializes detection parameters
+   - Creates visualization GUI if enabled
+
+2. Hardware Setup
+   - Configures camera (resolution/exposure)
+   - Maps GPIO pins to relays
+   - Sets up controller (None/Ute/Advanced)
+   - Initializes USB storage for data collection
+
+3. Detection Setup
+   - Configures spray zones and trigger lines
+   - Sets initial algorithm parameters
+   - Validates hardware capabilities
+
+Main Loop (hoot):
+1. Frame Processing:
+   - Acquires frame from camera/file
+   - Updates detection parameters
+   - Runs weed detection algorithm
+
+2. Detection Response:
+   - Maps detected weeds to spray zones
+   - Triggers appropriate relays
+   - Updates visualization
+
+3. Data Collection:
+   - Records frames/regions based on config
+   - Manages storage limits
+   - Logs performance metrics
+
+4. User Interface:
+   - Processes keyboard input
+   - Updates display windows
+   - Handles recording controls
+
+Error Handling:
+- Validates Python environment
+- Checks hardware compatibility
+- Manages GPIO conflicts
+- Handles storage issues
+- Reports algorithm errors
+
+Dependencies:
+Core:
+- OpenCV-Python: Image processing
+- NumPy: Array operations
+- imutils: Image utilities
+
+Custom modules:
+- error_manager: Error handling
+- input_manager: Hardware control
+- config_manager: Configuration
+- video_manager: Camera interface
+- image_sampler: Data collection
+- algorithms: Detection methods
+
+Configuration:
+- Uses .ini format
+- Validated sections:
+  - System: Core parameters
+  - Camera: Image acquisition
+  - Controller: Hardware interface
+  - DataCollection: Storage settings
+  - GreenOnBrown: Detection parameters
+  - Relays: GPIO mappings
