@@ -1,0 +1,65 @@
+2025-10-19 09:50:54,268 - INFO - Starting OWL - checking imports...
+2025-10-19 09:50:57,856 - INFO - All required modules imported successfully
+2025-10-19 09:50:57 - INFO - [__main__] - Initializing OWL...
+2025-10-19 09:50:57 - INFO - [__main__] - Starting OWL version 2.1.0
+2025-10-19 09:50:57 - INFO - [__main__] - System Information: OS: Linux 6.12.25+rpt-rpi-2712, Machine: aarch64
+2025-10-19 09:50:57 - INFO - [__main__] - Python Version: 3.11.2 (main, Apr 28 2025, 14:11:48) [GCC 12.2.0], Implementation: CPython, Compiler: GCC 12.2.0
+2025-10-19 09:50:57 - INFO - [__main__] - Hardware: Raspberry Pi 5 Model B Rev 1.0
+fatal : ni ceci ni aucun de ses répertoires parents n'est un dépôt git : .git
+2025-10-19 09:50:57 - WARNING - [SystemInfo] - Git information could not be retrieved: Command '['git', 'rev-parse', '--short', 'HEAD']' returned non-zero exit status 128.
+2025-10-19 09:50:57 - INFO - [__main__] - Git information not available.
+2025-10-19 09:50:57 - WARNING - [utils.config_manager] - Unknown keys in section [Relays]: 5, 8, 6, 7, 9, 4
+2025-10-19 09:50:57 - INFO - [utils.config_manager] - Successfully loaded and validated config: /home/owl/owl/config/DAY_SENSITIVITY_2.ini
+2025-10-19 09:50:57 - INFO - [__main__] - Raspberry Pi version: rpi-5
+2025-10-19 09:50:57 - ERROR - [utils.output_manager] - Failed to initialize RelayCo2025-10-19 09:50:58 - INFO - [utils.output_manager] - [INFO] Nozzle setup complete. Initiating camera...
+2025-10-19 09:50:59 - WARNING - [__main__] - High resolution, expect low framerate. Resolution set to 1024x768.
+2025-10-19 09:50:59 - INFO - [utils.video_manager] - Camera type: Picamera2Stream
+2025-10-19 09:50:59 - INFO - [utils.video_manager] - Setting camera format
+2025-10-19 09:50:59 - INFO - [utils.video_manager] - Setting camera controls
+[0:00:10.943790122] [831] [1;32m INFO [1;37mCamera [1;34mcamera_manager.cpp:326 [0mlibcamera v0.5.0+59-d83ff0a4
+[0:00:10.951443918] [1482] [1;32m INFO [1;37mRPI [1;34mpisp.cpp:720 [0mlibpisp version v1.2.1 981977ff21f3 29-04-2025 (14:13:50)
+[0:00:10.962025733] [1482] [1;32m INFO [1;37mRPI [1;34mpisp.cpp:1179 [0mRegistered camera /base/axi/pcie@1000120000/rp1/i2c@80000/imx296@1a to CFE device /dev/media0 and ISP device /dev/media1 using PiSP variant BCM2712_C0
+2025-10-19 09:50:59 - INFO - [picamera2.picamera2] - Initialization successful.
+2025-10-19 09:50:59 - INFO - [picamera2.picamera2] - Camera now open.
+2025-10-19 09:50:59 - INFO - [utils.video_manager] - [INFO] Using IMX296 Global Shutter Camera
+2025-10-19 09:50:59 - INFO - [picamera2.picamera2] - Camera configuration has been adjusted!
+[0:00:10.965784696] [831] [1;32m INFO [1;37mCamera [1;34mcamera.cpp:1205 [0mconfiguring streams: (0) 1024x768-RGB888 (1) 1456x1088-RGGB_PISP_COMP1
+[0:00:10.965911029] [1482] [1;32m INFO [1;37mRPI [1;34mpisp.cpp:1483 [0mSensor: /base/axi/pcie@1000120000/rp1/i2c@80000/imx296@1a - Selected sensor format: 1456x1088-SRGGB10_1X10 - Selected CFE format: 1456x1088-PC1R
+2025-10-19 09:50:59 - INFO - [picamera2.picamera2] - Configuration successful!
+2025-10-19 09:50:59 - INFO - [picamera2.picamera2] - Camera started
+2025-10-19 09:51:11 - INFO - [utils.greenongreen] - Using NCNN model from models/best_ncnn_model
+WARNING ⚠️ Unable to automatically guess model task, assuming 'task=detect'. Explicitly define task for your model, i.e. 'task=detect', 'segment', 'classify','pose' or 'obb'.
+Loading models/best_ncnn_model for NCNN inference...
+2025-10-19 09:51:22 - INFO - [__main__] - [INFO] Approximate FPS: 5.00
+2025-10-19 09:51:31 - INFO - [__main__] - [INFO] Approximate FPS: 10.87
+2025-10-19 09:51:41 - INFO - [__main__] - [INFO] Approximate FPS: 9.76
+^^
+  File "/home/owl/owl/./owl.py", line 167, in __init__
+    self.relay_controller = RelayController(relay_dict=self.relay_dict)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/owl/owl/utils/output_manager.py", line 469, in __init__
+    self.relay = RelayControl(self.relay_dict)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/owl/owl/utils/output_manager.py", line 411, in __init__
+    raise OWLAlreadyRunningError("OWL instance may already be running.") from e
+utils.error_manager.OWLAlreadyRunningError: 
+[1m[91mOWL Process Already Running[0m
+[93mError ID: OWL_20251019_095057[0m
+
+[92mStatus:[0m
+Another instance of OWL appears to be running. The GPIO pins are in use.
+
+[92mRunning OWL Processes:[0m
+    [1m[97mPID: 830[0m - Command: python ./owl.py
+    [1m[97mPID: 831[0m - Command: python ./owl.py
+
+[92mCommands to Stop:[0m
+    [1m[97mkill <PID>[0m  - Graceful termination
+    [1m[97mkill -9 <PID>[0m - Force termination (use with caution)
+
+[92mImportant Notes:[0m
+- Double-check the PID before stopping it!
+- If no processes are listed but error persists, check GPIO outputs
+- Ensure all GPIO resources are properly released
+- Try rebooting if the issue persists
+

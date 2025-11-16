@@ -1,0 +1,22 @@
+2025-10-08 22:39:31,869 - INFO - Starting OWL - checking imports...
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Can't connect to pigpio at localhost(8888)
+
+Did you start the pigpio daemon? E.g. sudo pigpiod
+
+Did you specify the correct Pi host/port in the environment
+variables PIGPIO_ADDR/PIGPIO_PORT?
+E.g. export PIGPIO_ADDR=soft, export PIGPIO_PORT=8888
+
+Did you specify the correct Pi host/port in the
+pigpio.pi() function? E.g. pigpio.pi('soft', 8888)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Traceback (most recent call last):
+  File "/home/owl/owl/./owl.py", line 65, in <module>
+    from utils.output_manager import RelayController, HeadlessStatusIndicator, UteStatusIndicator, AdvancedStatusIndicator
+  File "/home/owl/owl/utils/output_manager.py", line 42, in <module>
+    Device.pin_factory = PiGPIOFactory()
+                         ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/gpiozero/pins/pigpio.py", line 93, in __init__
+    raise IOError(f'failed to connect to {host}:{port}')
+OSError: failed to connect to localhost:8888
