@@ -1,0 +1,106 @@
+[2026-04-12 23:29:19.351] [134427] [HailoRT] [info] [vdevice.cpp:523] [create] Creating vdevice with params: device_count: 1, scheduling_algorithm: NONE, multi_process_service: false
+[2026-04-12 23:29:19.380] [134427] [HailoRT] [info] [device.cpp:49] [Device] OS Version: Linux 6.12.75+rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.12.75-1+rpt1~bookworm (2026-03-11) aarch64
+[2026-04-12 23:29:19.382] [134427] [HailoRT] [info] [control.cpp:108] [control__parse_identify_results] firmware_version is: 4.20.0
+[2026-04-12 23:29:19.382] [134427] [HailoRT] [info] [vdevice.cpp:651] [create] VDevice Infos: 0001:01:00.0
+[2026-04-12 23:29:19.392] [134427] [HailoRT] [info] [internal_buffer_manager.cpp:202] [print_execution_results] Default Internal buffer planner failed to meet requirements
+[2026-04-12 23:29:19.392] [134427] [HailoRT] [info] [internal_buffer_manager.cpp:212] [print_execution_results] Default Internal buffer planner executed successfully
+[2026-04-12 23:29:19.403] [134427] [HailoRT] [info] [device_internal.cpp:57] [configure] Configuring HEF took 20.178639 milliseconds
+[2026-04-12 23:29:19.403] [134427] [HailoRT] [info] [vdevice.cpp:749] [configure] Configuring HEF on VDevice took 20.9033 milliseconds
+[2026-04-12 23:29:19.403] [134427] [HailoRT] [info] [hef.cpp:1929] [get_network_group_and_network_name] No name was given. Addressing all networks of default network_group: adventices
+[2026-04-12 23:29:19.403] [134427] [HailoRT] [info] [hef.cpp:1929] [get_network_group_and_network_name] No name was given. Addressing all networks of default network_group: adventices
+[2026-04-12 23:29:19.404] [134427] [HailoRT] [info] [core_op.cpp:156] [activate] Activating adventices took 0.401081 milliseconds. Note that the function is asynchronous and thus the network is not fully activated yet.
+[2026-04-12 23:29:19.404] [134427] [HailoRT] [info] [core_op.cpp:156] [activate] Activating adventices took 0.409488 milliseconds. Note that the function is asynchronous and thus the network is not fully activated yet.
+[2026-04-12 23:29:19.405] [134427] [HailoRT] [info] [edge_elements.cpp:52] [create] Created (HwWriteEl10adventices/input_layer1 | hw_frame_size: 1228800)
+[2026-04-12 23:29:19.406] [134427] [HailoRT] [info] [queue_elements.cpp:284] [create] Created (PushQEl10adventices/input_layer1 | timeout: 10s)
+[2026-04-12 23:29:19.406] [134427] [HailoRT] [info] [filter_elements.cpp:101] [create] Created (PreInferEl10adventices/input_layer1 | Quantization - src_type: FLOAT32, dst_type UINT8, limvals_min: 0, limvals_max: 1)
+[2026-04-12 23:29:19.406] [134427] [HailoRT] [info] [vstream.cpp:754] [InputVStreamImpl] Creating adventices/input_layer1...
+[2026-04-12 23:29:19.406] [134427] [HailoRT] [info] [vstream_builder.cpp:102] [create_inputs] Input pipeline 'adventices/input_layer1': (PreInferEl10adventices/input_layer1 | Quantization - src_type: FLOAT32, dst_type UINT8, limvals_min: 0, limvals_max: 1) >> (PushQEl10adventices/input_layer1 | timeout: 10s) >> (HwWriteEl10adventices/input_layer1 | hw_frame_size: 1228800) >> HW
+[2026-04-12 23:29:19.407] [134427] [HailoRT] [info] [edge_elements.cpp:287] [create] Created (HwReadEl13adventices/conv41 | hw_frame_size: 409600)
+[2026-04-12 23:29:19.407] [134427] [HailoRT] [info] [queue_elements.cpp:657] [create] Created (PullQEl_hw_read13adventices/conv41)
+[2026-04-12 23:29:19.407] [134427] [HailoRT] [info] [filter_elements.cpp:375] [create] Created (PostInferEl13adventices/conv41 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -14.0726, limvals_max: 17.6841)
+[2026-04-12 23:29:19.407] [134427] [HailoRT] [info] [queue_elements.cpp:800] [create] Created (UserBuffQEl13adventices/conv41 | timeout: 10s)
+[2026-04-12 23:29:19.407] [134427] [HailoRT] [info] [vstream.cpp:1114] [OutputVStreamImpl] Creating adventices/conv41...
+[2026-04-12 23:29:19.407] [134427] [HailoRT] [info] [vstream_builder.cpp:220] [create_outputs] Output pipeline 'adventices/conv41': HW >> (HwReadEl13adventices/conv41 | hw_frame_size: 409600) >> (PullQEl_hw_read13adventices/conv41) >> (PostInferEl13adventices/conv41 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -14.0726, limvals_max: 17.6841) >> (UserBuffQEl13adventices/conv41 | timeout: 10s)
+[2026-04-12 23:29:19.408] [134427] [HailoRT] [info] [edge_elements.cpp:287] [create] Created (HwReadEl12adventices/conv42 | hw_frame_size: 6400)
+[2026-04-12 23:29:19.408] [134427] [HailoRT] [info] [queue_elements.cpp:657] [create] Created (PullQEl_hw_read12adventices/conv42)
+[2026-04-12 23:29:19.408] [134427] [HailoRT] [info] [filter_elements.cpp:375] [create] Created (PostInferEl12adventices/conv42 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -20.5724, limvals_max: 2.23614)
+[2026-04-12 23:29:19.408] [134427] [HailoRT] [info] [queue_elements.cpp:800] [create] Created (UserBuffQEl12adventices/conv42 | timeout: 10s)
+[2026-04-12 23:29:19.408] [134427] [HailoRT] [info] [vstream.cpp:1114] [OutputVStreamImpl] Creating adventices/conv42...
+[2026-04-12 23:29:19.408] [134427] [HailoRT] [info] [vstream_builder.cpp:220] [create_outputs] Output pipeline 'adventices/conv42': HW >> (HwReadEl12adventices/conv42 | hw_frame_size: 6400) >> (PullQEl_hw_read12adventices/conv42) >> (PostInferEl12adventices/conv42 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -20.5724, limvals_max: 2.23614) >> (UserBuffQEl12adventices/conv42 | timeout: 10s)
+[2026-04-12 23:29:19.408] [134427] [HailoRT] [info] [edge_elements.cpp:287] [create] Created (HwReadEl15adventices/conv52 | hw_frame_size: 102400)
+[2026-04-12 23:29:19.408] [134427] [HailoRT] [info] [queue_elements.cpp:657] [create] Created (PullQEl_hw_read15adventices/conv52)
+[2026-04-12 23:29:19.408] [134427] [HailoRT] [info] [filter_elements.cpp:375] [create] Created (PostInferEl15adventices/conv52 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -9.92727, limvals_max: 12.2785)
+[2026-04-12 23:29:19.408] [134427] [HailoRT] [info] [queue_elements.cpp:800] [create] Created (UserBuffQEl15adventices/conv52 | timeout: 10s)
+[2026-04-12 23:29:19.408] [134427] [HailoRT] [info] [vstream.cpp:1114] [OutputVStreamImpl] Creating adventices/conv52...
+[2026-04-12 23:29:19.408] [134427] [HailoRT] [info] [vstream_builder.cpp:220] [create_outputs] Output pipeline 'adventices/conv52': HW >> (HwReadEl15adventices/conv52 | hw_frame_size: 102400) >> (PullQEl_hw_read15adventices/conv52) >> (PostInferEl15adventices/conv52 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -9.92727, limvals_max: 12.2785) >> (UserBuffQEl15adventices/conv52 | timeout: 10s)
+[2026-04-12 23:29:19.408] [134427] [HailoRT] [info] [edge_elements.cpp:287] [create] Created (HwReadEl14adventices/conv53 | hw_frame_size: 1600)
+[2026-04-12 23:29:19.408] [134427] [HailoRT] [info] [queue_elements.cpp:657] [create] Created (PullQEl_hw_read14adventices/conv53)
+[2026-04-12 23:29:19.408] [134427] [HailoRT] [info] [filter_elements.cpp:375] [create] Created (PostInferEl14adventices/conv53 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -23.1756, limvals_max: 1.97239)
+[2026-04-12 23:29:19.408] [134427] [HailoRT] [info] [queue_elements.cpp:800] [create] Created (UserBuffQEl14adventices/conv53 | timeout: 10s)
+[2026-04-12 23:29:19.408] [134427] [HailoRT] [info] [vstream.cpp:1114] [OutputVStreamImpl] Creating adventices/conv53...
+[2026-04-12 23:29:19.408] [134427] [HailoRT] [info] [vstream_builder.cpp:220] [create_outputs] Output pipeline 'adventices/conv53': HW >> (HwReadEl14adventices/conv53 | hw_frame_size: 1600) >> (PullQEl_hw_read14adventices/conv53) >> (PostInferEl14adventices/conv53 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -23.1756, limvals_max: 1.97239) >> (UserBuffQEl14adventices/conv53 | timeout: 10s)
+[2026-04-12 23:29:19.408] [134427] [HailoRT] [info] [edge_elements.cpp:287] [create] Created (HwReadEl11adventices/conv62 | hw_frame_size: 25600)
+[2026-04-12 23:29:19.408] [134427] [HailoRT] [info] [queue_elements.cpp:657] [create] Created (PullQEl_hw_read11adventices/conv62)
+[2026-04-12 23:29:19.408] [134427] [HailoRT] [info] [filter_elements.cpp:375] [create] Created (PostInferEl11adventices/conv62 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -7.56805, limvals_max: 15.9667)
+[2026-04-12 23:29:19.409] [134427] [HailoRT] [info] [queue_elements.cpp:800] [create] Created (UserBuffQEl11adventices/conv62 | timeout: 10s)
+[2026-04-12 23:29:19.409] [134427] [HailoRT] [info] [vstream.cpp:1114] [OutputVStreamImpl] Creating adventices/conv62...
+[2026-04-12 23:29:19.409] [134427] [HailoRT] [info] [vstream_builder.cpp:220] [create_outputs] Output pipeline 'adventices/conv62': HW >> (HwReadEl11adventices/conv62 | hw_frame_size: 25600) >> (PullQEl_hw_read11adventices/conv62) >> (PostInferEl11adventices/conv62 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -7.56805, limvals_max: 15.9667) >> (UserBuffQEl11adventices/conv62 | timeout: 10s)
+[2026-04-12 23:29:19.409] [134427] [HailoRT] [info] [edge_elements.cpp:287] [create] Created (HwReadEl6adventices/conv63 | hw_frame_size: 3200)
+[2026-04-12 23:29:19.409] [134427] [HailoRT] [info] [queue_elements.cpp:657] [create] Created (PullQEl_hw_read6adventices/conv63)
+[2026-04-12 23:29:19.409] [134427] [HailoRT] [info] [filter_elements.cpp:375] [create] Created (PostInferEl6adventices/conv63 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -10.4845, limvals_max: 0 | Reorder - src_order: FCR, src_shape: (20, 20, 8), dst_order: FCR, dst_shape: (20, 20, 1))
+[2026-04-12 23:29:19.409] [134427] [HailoRT] [info] [queue_elements.cpp:800] [create] Created (UserBuffQEl6adventices/conv63 | timeout: 10s)
+[2026-04-12 23:29:19.409] [134427] [HailoRT] [info] [vstream.cpp:1114] [OutputVStreamImpl] Creating adventices/conv63...
+[2026-04-12 23:29:19.409] [134427] [HailoRT] [info] [vstream_builder.cpp:220] [create_outputs] Output pipeline 'adventices/conv63': HW >> (HwReadEl6adventices/conv63 | hw_frame_size: 3200) >> (PullQEl_hw_read6adventices/conv63) >> (PostInferEl6adventices/conv63 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -10.4845, limvals_max: 0 | Reorder - src_order: FCR, src_shape: (20, 20, 8), dst_order: FCR, dst_shape: (20, 20, 1)) >> (UserBuffQEl6adventices/conv63 | timeout: 10s)
+[2026-04-12 23:56:33.055] [948] [HailoRT] [info] [vdevice.cpp:523] [create] Creating vdevice with params: device_count: 1, scheduling_algorithm: NONE, multi_process_service: false
+[2026-04-12 23:56:33.075] [948] [HailoRT] [info] [device.cpp:49] [Device] OS Version: Linux 6.12.75+rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.12.75-1+rpt1~bookworm (2026-03-11) aarch64
+[2026-04-12 23:56:33.076] [948] [HailoRT] [info] [control.cpp:108] [control__parse_identify_results] firmware_version is: 4.20.0
+[2026-04-12 23:56:33.076] [948] [HailoRT] [info] [vdevice.cpp:651] [create] VDevice Infos: 0001:01:00.0
+[2026-04-12 23:56:33.088] [948] [HailoRT] [info] [internal_buffer_manager.cpp:202] [print_execution_results] Default Internal buffer planner failed to meet requirements
+[2026-04-12 23:56:33.088] [948] [HailoRT] [info] [internal_buffer_manager.cpp:212] [print_execution_results] Default Internal buffer planner executed successfully
+[2026-04-12 23:56:33.098] [948] [HailoRT] [info] [device_internal.cpp:57] [configure] Configuring HEF took 20.181815 milliseconds
+[2026-04-12 23:56:33.098] [948] [HailoRT] [info] [vdevice.cpp:749] [configure] Configuring HEF on VDevice took 20.906815 milliseconds
+[2026-04-12 23:56:33.098] [948] [HailoRT] [info] [hef.cpp:1929] [get_network_group_and_network_name] No name was given. Addressing all networks of default network_group: adventices
+[2026-04-12 23:56:33.098] [948] [HailoRT] [info] [hef.cpp:1929] [get_network_group_and_network_name] No name was given. Addressing all networks of default network_group: adventices
+[2026-04-12 23:56:33.099] [948] [HailoRT] [info] [core_op.cpp:156] [activate] Activating adventices took 0.387722 milliseconds. Note that the function is asynchronous and thus the network is not fully activated yet.
+[2026-04-12 23:56:33.099] [948] [HailoRT] [info] [core_op.cpp:156] [activate] Activating adventices took 0.395704 milliseconds. Note that the function is asynchronous and thus the network is not fully activated yet.
+[2026-04-12 23:56:33.101] [948] [HailoRT] [info] [edge_elements.cpp:52] [create] Created (HwWriteEl10adventices/input_layer1 | hw_frame_size: 1228800)
+[2026-04-12 23:56:33.101] [948] [HailoRT] [info] [queue_elements.cpp:284] [create] Created (PushQEl10adventices/input_layer1 | timeout: 10s)
+[2026-04-12 23:56:33.102] [948] [HailoRT] [info] [filter_elements.cpp:101] [create] Created (PreInferEl10adventices/input_layer1 | Quantization - src_type: FLOAT32, dst_type UINT8, limvals_min: 0, limvals_max: 1)
+[2026-04-12 23:56:33.102] [948] [HailoRT] [info] [vstream.cpp:754] [InputVStreamImpl] Creating adventices/input_layer1...
+[2026-04-12 23:56:33.102] [948] [HailoRT] [info] [vstream_builder.cpp:102] [create_inputs] Input pipeline 'adventices/input_layer1': (PreInferEl10adventices/input_layer1 | Quantization - src_type: FLOAT32, dst_type UINT8, limvals_min: 0, limvals_max: 1) >> (PushQEl10adventices/input_layer1 | timeout: 10s) >> (HwWriteEl10adventices/input_layer1 | hw_frame_size: 1228800) >> HW
+[2026-04-12 23:56:33.102] [948] [HailoRT] [info] [edge_elements.cpp:287] [create] Created (HwReadEl13adventices/conv41 | hw_frame_size: 409600)
+[2026-04-12 23:56:33.102] [948] [HailoRT] [info] [queue_elements.cpp:657] [create] Created (PullQEl_hw_read13adventices/conv41)
+[2026-04-12 23:56:33.103] [948] [HailoRT] [info] [filter_elements.cpp:375] [create] Created (PostInferEl13adventices/conv41 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -14.0726, limvals_max: 17.6841)
+[2026-04-12 23:56:33.103] [948] [HailoRT] [info] [queue_elements.cpp:800] [create] Created (UserBuffQEl13adventices/conv41 | timeout: 10s)
+[2026-04-12 23:56:33.103] [948] [HailoRT] [info] [vstream.cpp:1114] [OutputVStreamImpl] Creating adventices/conv41...
+[2026-04-12 23:56:33.103] [948] [HailoRT] [info] [vstream_builder.cpp:220] [create_outputs] Output pipeline 'adventices/conv41': HW >> (HwReadEl13adventices/conv41 | hw_frame_size: 409600) >> (PullQEl_hw_read13adventices/conv41) >> (PostInferEl13adventices/conv41 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -14.0726, limvals_max: 17.6841) >> (UserBuffQEl13adventices/conv41 | timeout: 10s)
+[2026-04-12 23:56:33.104] [948] [HailoRT] [info] [edge_elements.cpp:287] [create] Created (HwReadEl12adventices/conv42 | hw_frame_size: 6400)
+[2026-04-12 23:56:33.104] [948] [HailoRT] [info] [queue_elements.cpp:657] [create] Created (PullQEl_hw_read12adventices/conv42)
+[2026-04-12 23:56:33.104] [948] [HailoRT] [info] [filter_elements.cpp:375] [create] Created (PostInferEl12adventices/conv42 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -20.5724, limvals_max: 2.23614)
+[2026-04-12 23:56:33.104] [948] [HailoRT] [info] [queue_elements.cpp:800] [create] Created (UserBuffQEl12adventices/conv42 | timeout: 10s)
+[2026-04-12 23:56:33.104] [948] [HailoRT] [info] [vstream.cpp:1114] [OutputVStreamImpl] Creating adventices/conv42...
+[2026-04-12 23:56:33.104] [948] [HailoRT] [info] [vstream_builder.cpp:220] [create_outputs] Output pipeline 'adventices/conv42': HW >> (HwReadEl12adventices/conv42 | hw_frame_size: 6400) >> (PullQEl_hw_read12adventices/conv42) >> (PostInferEl12adventices/conv42 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -20.5724, limvals_max: 2.23614) >> (UserBuffQEl12adventices/conv42 | timeout: 10s)
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [edge_elements.cpp:287] [create] Created (HwReadEl15adventices/conv52 | hw_frame_size: 102400)
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [queue_elements.cpp:657] [create] Created (PullQEl_hw_read15adventices/conv52)
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [filter_elements.cpp:375] [create] Created (PostInferEl15adventices/conv52 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -9.92727, limvals_max: 12.2785)
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [queue_elements.cpp:800] [create] Created (UserBuffQEl15adventices/conv52 | timeout: 10s)
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [vstream.cpp:1114] [OutputVStreamImpl] Creating adventices/conv52...
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [vstream_builder.cpp:220] [create_outputs] Output pipeline 'adventices/conv52': HW >> (HwReadEl15adventices/conv52 | hw_frame_size: 102400) >> (PullQEl_hw_read15adventices/conv52) >> (PostInferEl15adventices/conv52 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -9.92727, limvals_max: 12.2785) >> (UserBuffQEl15adventices/conv52 | timeout: 10s)
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [edge_elements.cpp:287] [create] Created (HwReadEl14adventices/conv53 | hw_frame_size: 1600)
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [queue_elements.cpp:657] [create] Created (PullQEl_hw_read14adventices/conv53)
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [filter_elements.cpp:375] [create] Created (PostInferEl14adventices/conv53 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -23.1756, limvals_max: 1.97239)
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [queue_elements.cpp:800] [create] Created (UserBuffQEl14adventices/conv53 | timeout: 10s)
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [vstream.cpp:1114] [OutputVStreamImpl] Creating adventices/conv53...
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [vstream_builder.cpp:220] [create_outputs] Output pipeline 'adventices/conv53': HW >> (HwReadEl14adventices/conv53 | hw_frame_size: 1600) >> (PullQEl_hw_read14adventices/conv53) >> (PostInferEl14adventices/conv53 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -23.1756, limvals_max: 1.97239) >> (UserBuffQEl14adventices/conv53 | timeout: 10s)
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [edge_elements.cpp:287] [create] Created (HwReadEl11adventices/conv62 | hw_frame_size: 25600)
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [queue_elements.cpp:657] [create] Created (PullQEl_hw_read11adventices/conv62)
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [filter_elements.cpp:375] [create] Created (PostInferEl11adventices/conv62 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -7.56805, limvals_max: 15.9667)
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [queue_elements.cpp:800] [create] Created (UserBuffQEl11adventices/conv62 | timeout: 10s)
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [vstream.cpp:1114] [OutputVStreamImpl] Creating adventices/conv62...
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [vstream_builder.cpp:220] [create_outputs] Output pipeline 'adventices/conv62': HW >> (HwReadEl11adventices/conv62 | hw_frame_size: 25600) >> (PullQEl_hw_read11adventices/conv62) >> (PostInferEl11adventices/conv62 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -7.56805, limvals_max: 15.9667) >> (UserBuffQEl11adventices/conv62 | timeout: 10s)
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [edge_elements.cpp:287] [create] Created (HwReadEl6adventices/conv63 | hw_frame_size: 3200)
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [queue_elements.cpp:657] [create] Created (PullQEl_hw_read6adventices/conv63)
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [filter_elements.cpp:375] [create] Created (PostInferEl6adventices/conv63 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -10.4845, limvals_max: 0 | Reorder - src_order: FCR, src_shape: (20, 20, 8), dst_order: FCR, dst_shape: (20, 20, 1))
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [queue_elements.cpp:800] [create] Created (UserBuffQEl6adventices/conv63 | timeout: 10s)
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [vstream.cpp:1114] [OutputVStreamImpl] Creating adventices/conv63...
+[2026-04-12 23:56:33.105] [948] [HailoRT] [info] [vstream_builder.cpp:220] [create_outputs] Output pipeline 'adventices/conv63': HW >> (HwReadEl6adventices/conv63 | hw_frame_size: 3200) >> (PullQEl_hw_read6adventices/conv63) >> (PostInferEl6adventices/conv63 | Quantization - src_type: UINT8, dst_type FLOAT32, limvals_min: -10.4845, limvals_max: 0 | Reorder - src_order: FCR, src_shape: (20, 20, 8), dst_order: FCR, dst_shape: (20, 20, 1)) >> (UserBuffQEl6adventices/conv63 | timeout: 10s)
