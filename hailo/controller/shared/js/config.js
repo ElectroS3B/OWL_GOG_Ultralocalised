@@ -12,9 +12,9 @@
  */
 const CONFIG_FIELD_DEFS = {
     'System': {
-        'algorithm': { type: 'select', options: ['exhsv', 'exg', 'hsv', 'gog', 'gog-hybrid'], help: 'Detection algorithm' },
+        'algorithm': { type: 'select', options: ['exhsv', 'exg', 'hsv', 'gog', 'gog-hybrid', 'hailo'], help: 'Detection algorithm' },
         'input_file_or_directory': { type: 'text', help: 'Leave empty for camera input' },
-        'relay_num': { type: 'select', options: ['1', '2', '4', '8', '12', '16'], help: 'Number of relays' },
+        'relay_num': { type: 'select', options: ['1', '2', '4', '8', '10', '12', '16'], help: 'Number of relays' },
         'actuation_duration': { type: 'number', step: 0.01, min: 0.01, max: 2.0, help: 'Spray duration in seconds' },
         'delay': { type: 'number', step: 0.01, min: 0, max: 5.0, help: 'Delay before actuation' },
         'actuation_zone': { type: 'number', min: 1, max: 100, help: 'Actuation zone (% of frame from bottom)' }
