@@ -1,1 +1,2 @@
-
+In the Hailo folder of the Hailo branch, you will find a modified OWL that allows you to use Guy Coleman's dashboard with the hailo8 module (ai hat + hailo8 on a Raspberry Pi 5; I'm using the 26-top version). 
+In the model folder, you will find a trained model that can detect weeds in an onion crop.
