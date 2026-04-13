@@ -1,0 +1,1061 @@
+import subprocess
+import traceback
+import logging
+import sys
+import os
+
+from pathlib import Path
+from typing import List, Optional, Dict, Any, Set
+from datetime import datetime
+from dataclasses import dataclass
+
+# Base exception class for all OWL-specific errors
+class OWLError(Exception):
+    """Base exception class for all OWL-related errors."""
+
+    # Color definitions available to all OWL errors
+    COLORS = {
+        'RED': "\033[91m",
+        'GREEN': "\033[92m",
+        'YELLOW': "\033[93m",
+        'BLUE': "\033[94m",
+        'PURPLE': "\033[95m",
+        'CYAN': "\033[96m",
+        'WHITE': "\033[97m",
+        'RESET': "\033[0m",
+        'BOLD': "\033[1m",
+        'UNDERLINE': "\033[4m"
+    }
+
+    def __init__(self, message: str = None, details: Dict[str, Any] = None):
+        self.details = details or {}
+        self.timestamp = datetime.now()
+        self.error_id = f"OWL_{self.timestamp.strftime('%Y%m%d_%H%M%S')}"
+        super().__init__(message)
+
+    @classmethod
+    def colorize(cls, text: str, color: str, bold: bool = False, underline: bool = False) -> str:
+        """
+        Apply color and text formatting to a string.
+
+        Args:
+            text: The text to colorize
+            color: Color name from COLORS dict
+            bold: Whether to make the text bold
+            underline: Whether to underline the text
+        """
+        formatting = ""
+        if bold:
+            formatting += cls.COLORS['BOLD']
+        if underline:
+            formatting += cls.COLORS['UNDERLINE']
+
+        color_code = cls.COLORS.get(color.upper(), '')
+        return f"{formatting}{color_code}{text}{cls.COLORS['RESET']}"
+
+    def format_error_header(self, title: str) -> str:
+        """Create a standardized error header."""
+        return (
+            f"\n{self.colorize(title, 'RED', bold=True)}\n"
+            f"{self.colorize(f'Error ID: {self.error_id}', 'YELLOW')}\n"
+        )
+
+    def format_section(self, title: str, content: str) -> str:
+        """Create a standardized section in the error message."""
+        return (
+            f"\n{self.colorize(title + ':', 'GREEN')}\n"
+            f"{content}\n"
+        )
+
+### HARDWARE RELATED ERRORS ###
+
+@dataclass
+class ProcessInfo:
+    pid: int
+    command: str
+
+
+class StorageError(OWLError):
+    """Base class for storage-related errors"""
+    pass
+
+
+class USBError(StorageError):
+    """Base class for USB-related errors"""
+    pass
+
+
+class USBMountError(USBError):
+    """Raised when there are issues mounting a USB device"""
+
+    def __init__(self, device: str = None, message: str = None):
+        super().__init__(
+            message=None,
+            details={'device': device} if device else {}
+        )
+
+        if not message:
+            message = (
+                    self.format_error_header("USB Mount Error") +
+                    self.format_section(
+                        "Problem",
+                        f"Failed to mount USB device: {self.colorize(str(device), 'WHITE', bold=True)}"
+                    ) +
+                    self.format_section(
+                        "Solutions",
+                        "1. Check if USB device is properly connected\n"
+                        "2. Verify device permissions\n"
+                        "3. Check system mount points"
+                    )
+            )
+
+        self.args = (message,)
+
+
+class USBWriteError(USBError):
+    """Raised when there are issues writing to a USB device."""
+
+    def __init__(self, device: str = None, message: str = None):
+        # 1. Call super() first with details
+        super().__init__(
+            details={'device': device} if device else {}
+        )
+
+        # 2. Build the detailed message
+        #    (Use a different variable name to avoid confusion with the 'message' argument)
+        formatted_message = (
+                self.format_error_header("USB Write Error") +
+                self.format_section(
+                    "Problem",
+                    f"Failed to write to the USB device: {self.colorize(str(device), 'WHITE', bold=True)}"
+                ) +
+                self.format_section(
+                    "Common Solutions",
+                    "1. Check if the device is physically write-protected (e.g., a switch on an SD card adapter).\n"
+                    "2. Verify there is sufficient free space on the device.\n"
+                    "3. Check the file system permissions (e.g., `ls -l /media/owl/`)."
+                )
+        )
+
+        # 3. Set the final message for the exception
+        self.args = (formatted_message,)
+
+
+class NoWritableUSBError(USBError):
+    """Raised when no writable USB devices are found"""
+
+    def __init__(self, searched_paths: list[str] = None):
+        super().__init__(
+            message=None,
+            details={'searched_paths': searched_paths} if searched_paths else {}
+        )
+
+        message = (
+                self.format_error_header("No Writable USB Devices") +
+                self.format_section(
+                    "Problem",
+                    "No writable USB devices were found"
+                )
+        )
+
+        if searched_paths:
+            message += self.format_section(
+                "Searched Locations",
+                "\n".join(f"• {path}" for path in searched_paths)
+            )
+
+        message += self.format_section(
+            "Solutions",
+            "1. Check if USB device is properly connected\n"
+            "2. Verify USB device is not write-protected\n"
+            "3. Ensure USB device is properly formatted\n"
+            "4. Check device permissions"
+        )
+
+        self.args = (message,)
+
+
+class StorageSystemError(StorageError):
+    """Raised when there are platform/system compatibility issues with storage"""
+
+    def __init__(self, platform: str = None, message: str = None):
+        super().__init__(
+            message=None,
+            details={'platform': platform} if platform else {}
+        )
+
+        if not message:
+            message = (
+                    self.format_error_header("Storage System Compatibility Error") +
+                    self.format_section(
+                        "Problem",
+                        f"Storage operation not supported on {self.colorize(platform, 'WHITE', bold=True)} platform"
+                    ) +
+                    self.format_section(
+                        "Required",
+                        "This operation requires Linux/Raspberry Pi"
+                    ) +
+                    self.format_section(
+                        "Solutions",
+                        "1. Use a supported platform, or\n"
+                        "2. Specify a valid local directory path in config file\n"
+                        "3. Use --save-directory flag to set local path"
+                    )
+            )
+
+        self.args = (message,)
+
+### PROCESS RELATED ERRORS ###
+class OWLProcessError(OWLError):
+    """Base class for process-related errors."""
+    pass
+
+
+class OWLAlreadyRunningError(OWLProcessError):
+    """Raised when OWL is already running."""
+
+    @staticmethod
+    def get_owl_processes() -> List[ProcessInfo]:
+        """Get information about running OWL processes."""
+        try:
+            result = subprocess.check_output(['ps', '-eo', 'pid,command'], text=True).splitlines()
+            return [
+                ProcessInfo(pid=int(parts[0]), command=' '.join(parts[1:]))
+                for line in result
+                if 'owl.py' in line
+                   and len(parts := line.strip().split()) >= 2
+                   and parts[0].isdigit()
+            ]
+        except subprocess.CalledProcessError:
+            return []
+
+    def __init__(self, message: Optional[str] = None):
+        processes = self.get_owl_processes()
+
+        super().__init__(
+            message=None,
+            details={'running_processes': [vars(p) for p in processes]}
+        )
+
+        process_list = "\n".join(
+            f"    {self.colorize(f'PID: {proc.pid}', 'WHITE', bold=True)} - Command: {proc.command}"
+            for proc in processes
+        ) or "    No OWL processes found in PS output."
+
+        formatted_message = (
+                self.format_error_header("OWL Process Already Running") +
+                self.format_section(
+                    "Status",
+                    "Another instance of OWL appears to be running. The GPIO pins are in use."
+                ) +
+                self.format_section(
+                    "Running OWL Processes",
+                    process_list
+                ) +
+                self.format_section(
+                    "Commands to Stop",
+                    f"    {self.colorize('kill <PID>', 'WHITE', bold=True)}  - Graceful termination\n"
+                    f"    {self.colorize('kill -9 <PID>', 'WHITE', bold=True)} - Force termination (use with caution)"
+                ) +
+                self.format_section(
+                    "Important Notes",
+                    "- Double-check the PID before stopping it!\n"
+                    "- If no processes are listed but error persists, check GPIO outputs\n"
+                    "- Ensure all GPIO resources are properly released\n"
+                    "- Try rebooting if the issue persists"
+                )
+        )
+
+        self.args = (formatted_message,)
+
+
+class OWLControllerError(OWLError):
+    """Base class for controller-related errors."""
+    pass
+
+
+class ControllerPinError(OWLControllerError):
+    """Raised when there are issues with controller GPIO pins."""
+
+    def __init__(self, pin_name: str, pin_number: int = None, reason: str = None):
+        # Call super first
+        super().__init__(
+            message=None,
+            details={
+                'pin_name': pin_name,
+                'pin_number': pin_number,
+                'reason': reason
+            }
+        )
+
+        message = (
+            self.format_error_header("GPIO Pin Error") +
+            self.format_section(
+                "Pin Details",
+                f"• Name: {self.colorize(pin_name, 'WHITE', bold=True)}\n" +
+                (f"• Number: {self.colorize(f'BOARD{pin_number}', 'WHITE', bold=True)}\n" if pin_number else "") +
+                (f"• Reason: {reason}\n" if reason else "")
+            ) +
+            self.format_section(
+                "Common Fixes",
+                "1. Check for pin conflicts with other processes\n"
+                "2. Verify physical connections\n"
+                "3. Confirm pin numbers in config"
+            )
+        )
+        self.args = (message,)
+
+
+class ControllerConfigError(OWLControllerError):
+    """Raised when there are issues with controller configuration."""
+
+    def __init__(self, config_key: str, section: str = "Controller"):
+        # Call super first
+        super().__init__(
+            message=None,
+            details={
+                'config_key': config_key,
+                'section': section
+            }
+        )
+
+        message = (
+            self.format_error_header("Controller Configuration Error") +
+            self.format_section(
+                "Missing Configuration",
+                f"Required key '{self.colorize(config_key, 'WHITE', bold=True)}' "
+                f"not found in section [{self.colorize(section, 'WHITE', bold=True)}]"
+            ) +
+            self.format_section(
+                "Fix",
+                "1. Check your config.ini file\n"
+                f"2. Add the missing {config_key} setting in [{section}] section\n"
+                "3. Ensure the value is appropriate for your controller type"
+            )
+        )
+        self.args = (message,)
+
+
+class ControllerTypeError(OWLControllerError):
+    """Raised when an invalid controller type is specified in the config."""
+    def __init__(self, invalid_type: str, valid_types: List[str]):
+        super().__init__(
+            details={
+                'invalid_type': invalid_type,
+                'valid_types': valid_types
+            }
+        )
+        formatted_message = (
+            self.format_error_header("Invalid Controller Type") +
+            self.format_section(
+                "Problem",
+                f"The controller type '{self.colorize(invalid_type, 'WHITE', bold=True)}' is not recognized."
+            ) +
+            self.format_section(
+                "Valid Options",
+                "Please use one of the following in your config file under the [Controller] section.\nPay careful attention to spelling and spaces:\n" +
+                "\n".join(f"• {v_type}" for v_type in valid_types)
+            )
+        )
+        self.args = (formatted_message,)
+
+
+class OWLConfigError(OWLError):
+    """Base class for config file errors"""
+    pass
+
+
+class ConfigFileError(OWLConfigError):
+    """Raised when there are issues with the config file itself"""
+    def __init__(self, config_path: Path, reason: str = None):
+        # First initialize parent
+        super().__init__(
+            message=None,
+            details={
+                'config_path': str(config_path),
+                'reason': reason
+            }
+        )
+
+        # Now build message using parent's methods
+        message = (
+            self.format_error_header("Configuration File Error") +
+            self.format_section(
+                "Problem",
+                f"Cannot load configuration file: {self.colorize(str(config_path), 'WHITE', bold=True)}\n"
+                f"Reason: {reason if reason else 'File not found or inaccessible'}"
+            ) +
+            self.format_section(
+                "Fix",
+                "1. Verify the config file exists\n"
+                "2. Check file permissions\n"
+                "3. Ensure the file path is correct\n"
+                "4. Verify the file is not corrupted"
+            )
+        )
+        self.args = (message,)  # Update Exception's message
+
+
+class ConfigSectionError(OWLConfigError):
+    """Raised when required sections are missing"""
+    def __init__(self, missing_sections: Set[str], config_path: Path):
+        super().__init__(
+            message=None,
+            details={
+                'missing_sections': list(missing_sections),
+                'config_path': str(config_path)
+            }
+        )
+
+        message = (
+            self.format_error_header("Missing Configuration Sections") +
+            self.format_section(
+                "Problem",
+                f"Required sections missing from {self.colorize(str(config_path), 'WHITE', bold=True)}:\n" +
+                "\n".join(f"• {self.colorize(section, 'WHITE', bold=True)}"
+                         for section in missing_sections)
+            ) +
+            self.format_section(
+                "Fix",
+                "Add the missing sections to your config file with appropriate settings"
+            )
+        )
+        self.args = (message,)
+
+
+class ConfigKeyError(OWLConfigError):
+    """Raised when required keys are missing in a section"""
+    def __init__(self, section: str, missing_keys: Set[str], config_path: Path):
+        super().__init__(
+            message=None,
+            details={
+                'section': section,
+                'missing_keys': list(missing_keys),
+                'config_path': str(config_path)
+            }
+        )
+
+        message = (
+            self.format_error_header("Missing Configuration Keys") +
+            self.format_section(
+                "Problem",
+                f"Required keys missing from section [{self.colorize(section, 'WHITE', bold=True)}]:\n" +
+                "\n".join(f"• {self.colorize(key, 'WHITE', bold=True)}"
+                         for key in missing_keys)
+            ) +
+            self.format_section(
+                "Fix",
+                f"Add the missing keys to the [{section}] section of your config file"
+            )
+        )
+        self.args = (message,)
+
+
+class ConfigValueError(OWLConfigError):
+    """Raised when configuration values are invalid"""
+    def __init__(self, section_errors: Dict[str, Dict[str, str]], config_path: Path):
+        super().__init__(
+            message=None,
+            details={
+                'section_errors': section_errors,
+                'config_path': str(config_path)
+            }
+        )
+
+        error_lines = []
+        for section, errors in section_errors.items():
+            for key, error_msg in errors.items():
+                error_lines.append(
+                    f"[{self.colorize(section, 'WHITE', bold=True)}] "
+                    f"{self.colorize(key, 'WHITE', bold=True)} = {error_msg}"
+                )
+
+        message = (
+            self.format_error_header("Invalid Configuration Values") +
+            self.format_section(
+                "Problem",
+                "The following configuration values are invalid:\n" +
+                "\n".join(f"• {line}" for line in error_lines)
+            ) +
+            self.format_section(
+                "Fix",
+                f"Correct these values in your config file to be within their expected ranges"
+            )
+        )
+        self.args = (message,)
+
+
+class AlgorithmError(OWLError):
+    """Base class for algorithm-related errors"""
+
+    ERROR_MESSAGES = {
+        ModuleNotFoundError: {
+            'ultralytics': {
+                'message': "Ultralytics YOLO not installed",
+                'details': "The ultralytics package is required for AI weed detection",
+                'fix': "Install with: pip install ultralytics"
+            }
+        },
+        (IndexError, FileNotFoundError): {
+            'models': {
+                'message': "Model files not found",
+                'details': "No YOLO model (.pt or NCNN) found in the specified path",
+                'fix': "Place a YOLO model in the 'models' directory or update model_path in config"
+            }
+        },
+        (RuntimeError, ValueError): {
+            'inference': {
+                'message': "Model inference failed",
+                'details': "YOLO model failed during inference",
+                'fix': "Check model format is compatible (NCNN or .pt) and not corrupted"
+            }
+        }
+    }
+
+    def __init__(self, algorithm: str, error: Exception):
+        super().__init__(
+            message=None,
+            details={
+                'algorithm': algorithm,
+                'error_type': type(error).__name__,
+                'original_error': str(error)
+            }
+        )
+
+        self.algorithm = algorithm
+        self.original_error = error
+        self.error_type = type(error)
+
+        error_config = self._get_error_config(error)
+        self.message = self._format_error_message(error_config)
+
+        self.args = (self.message,)
+
+    def _get_error_config(self, error: Exception) -> dict:
+        """Find the matching error configuration."""
+        for error_types, configs in self.ERROR_MESSAGES.items():
+            if isinstance(error, error_types):
+                if isinstance(error, ValueError) and 'delegate' in str(error):
+                    return configs['delegate']
+                return next(iter(configs.values()))
+        return {
+            'message': "Unrecognized algorithm error",
+            'details': str(error),
+            'fix': "Check the error message and logs for more information"
+        }
+
+    def _format_error_message(self, config: dict) -> str:
+        """Format the error message with the configuration."""
+        return (
+            self.format_error_header(f"Algorithm Error: {config['message']}") +
+            self.format_section(
+                "Algorithm",
+                f"Failed to initialize algorithm: {self.colorize(self.algorithm, 'WHITE', bold=True)}"
+            ) +
+            self.format_section(
+                "Details",
+                f"{config['details']}\n"
+                f"Original error: {self.colorize(str(self.original_error), 'WHITE')}"
+            ) +
+            self.format_section(
+                "Fix",
+                config['fix']
+            )
+        )
+
+    def handle(self, owl_instance) -> None:
+        """
+        Handle algorithm errors with appropriate logging and actions.
+
+        Args:
+            owl_instance: The Owl instance that encountered the error.
+        """
+        logger = getattr(owl_instance, 'logger', logging.getLogger(__name__))
+
+        logger.error(
+            self.message,
+            extra={
+                'algorithm': self.algorithm,
+                'error_type': self.error_type.__name__,
+                'error_details': self.details
+            }
+        )
+
+        if logger.isEnabledFor(logging.DEBUG):
+            traceback_str = ''.join(traceback.format_exception(None, self.original_error, self.original_error.__traceback__))
+            logger.debug(
+                "Full error context",
+                extra={
+                    'traceback': traceback_str,
+                    'error_class': f"{self.error_type.__module__}.{self.error_type.__name__}"
+                }
+            )
+
+        if hasattr(owl_instance, 'stop'):
+            owl_instance.stop()
+        else:
+            logger.info("Exiting due to algorithm error.")
+            sys.exit(1)
+
+
+class OpenCVError(OWLError):
+    """Raised when there are issues with OpenCV (cv2) initialization or imports"""
+
+    def __init__(self, error_msg: str = None):
+        super().__init__(
+            message=None,
+            details={
+                'original_error': error_msg,
+                'virtual_env': os.environ.get('VIRTUAL_ENV'),
+                'python_version': sys.version,
+                'env_path': sys.prefix
+            }
+        )
+
+        message = (
+            self.format_error_header("OpenCV (cv2) Import Error") +
+            self.format_section(
+                "Problem",
+                f"Failed to import OpenCV (cv2)\n"
+                f"Error: {self.colorize(str(error_msg), 'WHITE', bold=True)}"
+            ) +
+            self.format_section(
+                "Likely Cause",
+                "You are not in the 'owl' virtual environment"
+            ) +
+            self.format_section(
+                "Solution",
+                "1. Activate the owl virtual environment:\n"
+                f"   {self.colorize('workon owl', 'WHITE', bold=True)}\n\n"
+                "2. If the environment doesn't exist, create it with the owl_setup.sh:\n"
+                f"   {self.colorize('bash owl_setup.sh', 'WHITE', bold=True)}\n"
+                "3. If opencv (cv2) is not yet installed in the environment, use owl_setup.sh:\n"
+                f"   {self.colorize('bash owl_setup.sh', 'WHITE', bold=True)}\n"
+                f"3. or install it manually within the {self.colorize('(owl)', 'GREEN', bold=True)} environment:\n"
+                f"   {self.colorize('pip install opencv-python', 'WHITE', bold=True)}\n"
+            ) +
+            self.format_section(
+                "Verify Environment",
+                f"After activation, you should see {self.colorize('(owl)', 'GREEN', bold=True)} "
+                "at the start of the command prompt.\nIf the error persists, raise an issue on the OpenWeedLocator"
+                "Github page:\nhttps://github.com/geezacoleman/OpenWeedLocator/issues"
+            )
+        )
+
+        self.args = (message,)
+
+    def handle(self, owl_instance=None) -> None:
+        """
+        Handle OpenCV errors with appropriate logging and actions.
+
+        Args:
+            owl_instance: Optional Owl instance that encountered the error.
+        """
+        if owl_instance and hasattr(owl_instance, 'logger'):
+            logger = owl_instance.logger
+        else:
+            logger = logging.getLogger(__name__)
+
+        logger.error(
+            str(self),
+            extra={
+                'virtual_env': os.environ.get('VIRTUAL_ENV'),
+                'python_version': sys.version,
+                'env_path': sys.prefix,
+                'error_details': self.details
+            }
+        )
+
+        if owl_instance and hasattr(owl_instance, 'stop'):
+            owl_instance.stop()
+        else:
+            logger.info("Exiting due to OpenCV import error.")
+            sys.exit(1)
+
+
+class DependencyError(OWLError):
+    """Raised when there are issues with Python package dependencies"""
+
+    PACKAGE_MAP = {
+        'imutils': 'imutils',
+        'cv2': 'opencv-python',
+        'multiprocessing': 'multiprocessing',
+        'pathlib': 'pathlib',
+        'version': 'local version.py file',
+        'SystemInfo': 'local version.py file',
+        'FPS': 'imutils'
+    }
+
+    def __init__(self, missing_module: str, error_msg: str = None):
+        self.missing_module = missing_module
+        self.pip_package = self.PACKAGE_MAP.get(missing_module, missing_module)
+
+        super().__init__(
+            message=None,
+            details={
+                'missing_module': missing_module,
+                'pip_package': self.pip_package,
+                'original_error': error_msg
+            }
+        )
+
+        # Build detailed error message
+        if self.pip_package.startswith('local'):
+            # Handle local file dependencies
+            message = self._format_local_file_error()
+        else:
+            # Handle pip installable packages
+            message = self._format_pip_package_error()
+
+        self.args = (message,)
+
+    def _format_pip_package_error(self) -> str:
+        """Format error message for pip installable packages"""
+        return (
+                self.format_error_header("Python Package Dependency Error") +
+                self.format_section(
+                    "Problem",
+                    f"Failed to import required module: {self.colorize(self.missing_module, 'WHITE', bold=True)}\n"
+                    "This usually means the package is not installed in the owl virtual environment."
+                ) +
+                self.format_section(
+                    "Quick Fix",
+                    f"Install the missing package:\n"
+                    f"1. Ensure you're in the owl environment:\n"
+                    f"   {self.colorize('workon owl', 'WHITE', bold=True)}\n"
+                    f"2. Install the package:\n"
+                    f"   {self.colorize(f'pip install {self.pip_package}', 'WHITE', bold=True)}"
+                ) +
+                self.format_section(
+                    "Complete Fix",
+                    "Install all requirements:\n"
+                    f"1. Activate owl environment: {self.colorize('workon owl', 'WHITE', bold=True)}\n"
+                    f"2. Navigate to owl directory: {self.colorize('cd /path/to/owl', 'WHITE', bold=True)}\n"
+                    f"3. Install requirements: {self.colorize('pip install -r requirements.txt', 'WHITE', bold=True)}"
+                ) +
+                self.format_section(
+                    "Verify Installation",
+                    f"Check if package is installed:\n"
+                    f"{self.colorize(f'pip show {self.pip_package}', 'WHITE', bold=True)}"
+                )
+        )
+
+    def _format_local_file_error(self) -> str:
+        """Format error message for local file dependencies"""
+        return (
+                self.format_error_header("Local Module Import Error") +
+                self.format_section(
+                    "Problem",
+                    f"Failed to import local module: {self.colorize(self.missing_module, 'WHITE', bold=True)}\n"
+                    "This usually means you're not in the correct directory or the file is missing."
+                ) +
+                self.format_section(
+                    "Solution",
+                    "1. Ensure you're in the owl environment:\n"
+                    f"   {self.colorize('workon owl', 'WHITE', bold=True)}\n"
+                    "2. Navigate to the owl directory:\n"
+                    f"   {self.colorize('cd /path/to/owl', 'WHITE', bold=True)}\n"
+                    "3. Verify the file exists:\n"
+                    f"   {self.colorize(f'ls {self.missing_module}.py', 'WHITE', bold=True)}"
+                ) +
+                self.format_section(
+                    "If File is Missing",
+                    "The file might have been deleted or not properly downloaded.\n"
+                    "Try reinstalling OWL from the repository."
+                )
+        )
+
+    def handle(self, owl_instance=None) -> None:
+        """Handle dependency errors with appropriate logging and actions"""
+        if owl_instance and hasattr(owl_instance, 'logger'):
+            logger = owl_instance.logger
+        else:
+            logger = logging.getLogger(__name__)
+
+        # Log the error
+        logger.error(
+            str(self),
+            extra={
+                'missing_module': self.missing_module,
+                'pip_package': self.pip_package,
+                'error_details': self.details
+            }
+        )
+
+        if owl_instance and hasattr(owl_instance, 'stop'):
+            owl_instance.stop()
+        else:
+            sys.exit(1)
+
+
+### MEDIA RELATED ERRORS ###
+class MediaPathError(OWLError):
+    """Raised when specified media path does not exist"""
+
+    def __init__(self, path: Path, message: str = None):
+        super().__init__(
+            message=None,
+            details={'path': str(path)}
+        )
+
+        message = (
+                self.format_error_header("Media Path Error") +
+                self.format_section(
+                    "Problem",
+                    f"Cannot access input path: {self.colorize(str(path), 'WHITE', bold=True)}"
+                ) +
+                self.format_section(
+                    "Fix",
+                    "1. Verify the path exists\n"
+                    "2. Check file/directory permissions\n"
+                    "3. Ensure the path is correctly specified in config or CLI args"
+                )
+        )
+        self.args = (message,)
+
+
+class InvalidMediaError(OWLError):
+    """Raised when input file is not a supported media format"""
+
+    def __init__(self, path: Path, valid_formats: set):
+        super().__init__(
+            message=None,
+            details={
+                'path': str(path),
+                'extension': path.suffix,
+                'valid_formats': list(valid_formats)
+            }
+        )
+
+        message = (
+                self.format_error_header("Invalid Media Format") +
+                self.format_section(
+                    "Problem",
+                    f"File type not supported: {self.colorize(str(path), 'WHITE', bold=True)}"
+                ) +
+                self.format_section(
+                    "Supported Formats",
+                    "All media: " + ", ".join(f for f in valid_formats if f[0] == '.')
+                ) +
+                self.format_section(
+                    "Fix",
+                    "1. Provide a file in one of the supported formats\n"
+                    "2. Convert your media to a supported format"
+                )
+        )
+        self.args = (message,)
+
+
+class MediaInitError(OWLError):
+    """Raised when media source fails to initialize"""
+
+    def __init__(self, path: Path, original_error: str):
+        super().__init__(
+            message=None,
+            details={
+                'path': str(path),
+                'error': original_error
+            }
+        )
+
+        message = (
+                self.format_error_header("Media Initialization Error") +
+                self.format_section(
+                    "Problem",
+                    f"Failed to initialize media from: {self.colorize(str(path), 'WHITE', bold=True)}\n"
+                    f"Error: {original_error}"
+                ) +
+                self.format_section(
+                    "Fix",
+                    "1. Verify the file is not corrupted\n"
+                    "2. Check if the file can be opened in other applications\n"
+                    "3. Ensure sufficient system resources are available"
+                )
+        )
+        self.args = (message,)
+
+
+class CameraNotFoundError(OWLError):
+    """Raised when there are issues with camera initialization or connection."""
+
+    def __init__(self, error_type: str = None, original_error: str = None):
+        # Initialize parent first
+        super().__init__(
+            message=None,
+            details={
+                'error_type': error_type,
+                'original_error': original_error
+            }
+        )
+
+        message = (
+            self.format_error_header("Camera Connection Error") +
+            self.format_section(
+                "Problem",
+                f"Failed to initialize camera: {self.colorize(error_type, 'WHITE', bold=True)}\n"
+                f"Error details: {original_error}"
+            ) +
+            self.format_section(
+                "Solutions",
+                "1. Check if the camera ribbon cable is properly connected\n"
+                "2. Inspect the ribbon cable for damage\n"
+                "3. Verify camera module is properly seated\n"
+                "4. Check if camera is enabled in raspi-config\n"
+                "5. Try reconnecting the camera with the system powered off"
+            ) +
+            self.format_section(
+                "How to get more information",
+                f"• {self.colorize('vcgencmd get_camera', 'WHITE', bold=True)} - Check if camera is detected\n"
+                f"• {self.colorize('libcamera-hello', 'WHITE', bold=True)} - Test camera feed\n"
+                f"• {self.colorize('dmesg | grep -i camera', 'WHITE', bold=True)} - Check system logs"
+            )
+        )
+
+        self.args = (message,)
+
+
+class CameraInitError(OWLError):
+    """Raised when camera initialization fails"""
+
+    def __init__(self, error_msg: str):
+        super().__init__(
+            message=None,
+            details={'error': error_msg}
+        )
+
+        message = (
+                self.format_error_header("Camera Initialization Error") +
+                self.format_section(
+                    "Problem",
+                    f"Failed to initialize camera\nError: {error_msg}"
+                ) +
+                self.format_section(
+                    "Fix",
+                    "1. Check camera connection\n"
+                    "2. Verify the camera is supported (currently only Raspberry Pi Cameras and USB Cameras are likely to work.\n"
+                    "3. Ensure camera is not in use by another process\n"
+                    "4. Try rebooting the system."
+                )
+        )
+        self.args = (message,)
+
+### VIDEO STREAMING ERRORS ###
+class MJPEGStreamError(OWLError):
+    """Raised when the internal MJPEG streaming server fails to start."""
+
+    def __init__(self, host: str, port: int, original_error: Exception = None):
+        super().__init__(
+            details={
+                'host': host,
+                'port': port,
+                'original_error': str(original_error)
+            }
+        )
+
+        formatted_message = (
+            self.format_error_header("MJPEG Video Stream Error") +
+            self.format_section(
+                "Problem",
+                f"The internal video streaming server failed to start on address "
+                f"{self.colorize(f'{host}:{port}', 'WHITE', bold=True)}."
+            ) +
+            self.format_section(
+                "Likely Cause",
+                "The port is already being used by another application. This often happens if a "
+                "previous OWL session did not shut down correctly."
+            ) +
+            self.format_section(
+                "How to Fix",
+                "1. Check if another `owl.py` process is running:\n"
+                f"   {self.colorize('pgrep -f owl.py', 'WHITE')}\n"
+                "   If this returns a number (a PID), stop it with:\n"
+                f"   {self.colorize('kill <PID>', 'WHITE')}\n\n"
+                "2. Find out which process is using the port with this command:\n"
+                f"   {self.colorize(f'sudo lsof -i :{port}', 'WHITE')}\n\n"
+                "3. If the port is essential for another service, you can change the stream port "
+                "inside `owl.py` in the `start_streaming_server` method."
+            )
+        )
+
+        self.args = (formatted_message,)
+
+
+### DASHBOARD RELATED ERRORS ###
+class DashboardError(OWLError):
+    """Base class for dashboard-specific errors."""
+    pass
+
+
+class MQTTConnectionError(DashboardError):
+    """Raised when the application cannot connect to the MQTT broker."""
+    def __init__(self, host: str, port: int, original_error: Exception = None):
+        super().__init__(
+            details={
+                'host': host,
+                'port': port,
+                'original_error': str(original_error)
+            }
+        )
+        formatted_message = (
+            self.format_error_header("MQTT Broker Connection Error") +
+            self.format_section(
+                "Problem",
+                f"Could not connect to the MQTT broker at {self.colorize(f'{host}:{port}', 'WHITE', bold=True)}."
+            ) +
+            self.format_section(
+                "Likely Cause",
+                "The Mosquitto MQTT service is not running or has failed."
+            ) +
+            self.format_section(
+                "How to Fix",
+                "1. Check the status of the service using this command in the terminal:\n"
+                f"   {self.colorize('sudo systemctl status mosquitto', 'WHITE')}\n\n"
+                "2. If it's not running, start it with:\n"
+                f"   {self.colorize('sudo systemctl start mosquitto', 'WHITE')}\n\n"
+                "3. To view detailed logs for the broker, use:\n"
+                f"   {self.colorize('journalctl -u mosquitto -f', 'WHITE')}"
+            )
+        )
+        self.args = (formatted_message,)
+
+
+### RASPBERRY PI VERSION ERRORS ###
+class RPVersionError(OWLError):
+    """
+    A non-blocking warning raised when the Raspberry Pi version cannot be determined.
+    This is logged but does not stop the application, though some features may be disabled.
+    """
+    def __init__(self, original_error: str = "Reason unknown"):
+        super().__init__(
+            details={
+                'original_error': original_error,
+                'os_platform': sys.platform
+            }
+        )
+
+        formatted_message = (
+            self.format_error_header("Raspberry Pi Version Warning") +
+            self.format_section(
+                "Problem",
+                "Could not automatically determine the Raspberry Pi model."
+            ) +
+            self.format_section(
+                "Impact",
+                "The application will continue to run, but hardware-specific features "
+                f"(like {self.colorize('Raspberry Pi 5 Fan Control', 'WHITE', bold=True)}) will be disabled."
+            ) +
+            self.format_section(
+                "Likely Cause",
+                "• The script is running on a non-Raspberry Pi device (e.g., a laptop or VM).\n"
+                "• The operating system is not a standard Raspberry Pi OS distribution.\n"
+                f"• The device-tree model file is missing or inaccessible. Original Error: {original_error}"
+            ) +
+            self.format_section(
+                "Verification (on the device)",
+                "You can manually check for the model file in the terminal with:\n"
+                f"  {self.colorize('cat /proc/device-tree/model', 'WHITE')}\n\n"
+                "If this command works, but the error persists, please raise an issue on GitHub."
+            )
+        )
+
+        self.args = (formatted_message,)
